@@ -1,0 +1,83 @@
+#=========================Information projet ==============================
+
+#   Projet : TP
+#   Nom sujet: TP1.pdf
+#   Auteur: Bel Eric
+#   Date: 11/09/2026
+#   source: dossier IMC
+
+
+
+#=============== Visualisation de fichier ========
+
+readLines("../data/imcenfant.txt",n=20)
+
+
+#=============== importationd de donne / creation de data frame   ========
+ 
+datasets=read.table("../data/imcenfant.txt", header = TRUE, sep = "",dec =".")
+
+#============== Verification de l'importation de donnee=========
+
+head(datasets)
+str(datasets)
+
+#============ Calcul de l'imc et afficahge  ================
+
+imc= with(datasets, 
+          poids/(taille/100)^2
+          )
+str(datasets)
+datasets$imc=imc
+#datasets =data.frame( datasets,
+#                      imc=c(imc))
+str(datasets$imc)
+
+
+
+#================Detection de nombre d'enfant par categorie ===================
+
+test1 = datasets$imc >= 16.5 & datasets$imc <= 18.5
+#test1= with(datasets, imc >= 16.5 & imc <= 18.5)
+#sum(with(datasets, imc >=16.5 & imc <= 18.5))
+#with(datasets, sum(imc >=16.5 & imc <= 18.5))
+sum(test1)
+
+test2 = datasets$imc < 16.5 
+sum(test2)
+
+#============= classement par categorie =======
+
+datasets$categorie = with(datasets,
+                          ifelse(imc <= 16.5,"Anorexie",
+                          ifelse(imc > 16.5 & imc <= 18.5 , "Maigreur",
+                          ifelse(imc > 18.5 & imc <= 25, "Normal",
+                      ifelse(imc > 25 & imc <= 30, "Surpoids", "Obèse")
+        ))))
+           
+head(datasets)
+str(datasets$categorie)
+
+#=============================================================
+#==============conversion de type de donne ===================
+
+datasets$categorie = with(datasets, factor(categorie ))
+#datasets$categorie = factor(datasets$categorie)
+str(datasets)
+#===============================================================================
+#=========== comptage du nombre d'observation par categorie creation de table =======
+#with(datasets, table(categorie))
+table(datasets$categorie)
+
+#================== affichage par frequence de la distribution  =============
+
+round(100 * prop.table(table(datasets$categorie)),2)
+
+#======== Enregistrement pour usage ulterieur ========
+saveRDS(datasets, file = "IMC.rds")
+
+
+rm(list =  ls())
+datasets = readRDS(file="IMC.rds")
+str(datasets)
+
