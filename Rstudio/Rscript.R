@@ -47,14 +47,33 @@ within(dataset1,{
 
 #=====================================================
 #===================creation des variable ============
-#================delay_dep===========================================
-# ici, nous allons nous referer a la colone dep_delay(en min) pour creer la colone 
-#delay_dep( retard depart.) on supose pour cela que les lignes de dep_delay sans donnee 
-# sont considerer comme des depart sans retard( dep_delay = 0)
+#================conversion de donnée ==========================================
+# ici, nous allons nous referer aux colones dep_delay, arr_delay en min pour creer les colones
+#delay_dep( retard depart.) et delay_arri(retard arriver ) on supose pour cela que les cellules de dep_delay et arr_delay sans donnee 
+# sont considerer comme des depart sans retard( dep_delay = 0), les depart aveec des valeur positives ont considerer comme des retard et ceux aves des valeurs 
+# negative comme des depart en avant ou des depart avant l'heur. 
 #======== conversion des ligne vide a 0 =========================
-                #j'ai confondu = et ==, et apres il fallait que j'utilise la fonction is.na() pour trouver les champs vide 
+    #j'ai confondu = et ==, et apres il fallait que j'utilise la fonction is.na() pour trouver les champs vide 
 dataset1$dep_delay= with(dataset1,ifelse(is.na(dep_delay), 0, dep_delay ) )
 #A present, j'ai un soucis qui est que j'ai dans mes donner des nombre negatif. faut il les considerer comme un retard ou quoi ? 
 #==========================================================================
 #======================= delay_arr ===========
 dataset1$arr_delay= with(dataset1,ifelse(is.na(arr_delay), 0, arr_delay ) )
+#======= creation des variables.==============
+  #delay_dep
+dataset1$delay_dep= with(dataset1, ifelse(dep_delay >0, "Yes","No"))
+summary(dataset1$delay_dep)
+table(dataset1$delay_dep)
+  #delay_arr
+dataset1$delay_arr= with(dataset1, ifelse(arr_delay >0, "Yes","No"))
+table(dataset1$delay_arr)
+summary(dataset1$dep_time)
+
+#=============== la variable canceled =====================
+#comme les deux premiers variables, elle prend yes si une annulation a ete remarque. ooooh, je suis bete de n'avoir pas
+#penser qu'avoir une cellule vide est egale a une annulation...
+dataset1$canceled= with(dataset1, ifelse(is.na(dep_time), "yes", "no"))
+table(dataset1$canceled)
+
+#===========creation de la variable distance_class==========
+#on utilise la variable distance qu'on section en 5 
