@@ -23,10 +23,14 @@ dataset1=dataset  #la copie de datasets en dataset1 pour eviter l'ecrasement des
 #======================================================
 #=======================conversion du types des donnees ============
 
-dataset1$carrier=with(dataset1, factor(carrier))
-dataset1$origin=with(dataset1, factor(origin))
-dataset1$dest=with(dataset1, factor(dest))
-dataset1$name=with(dataset1, factor(name))
+dataset1$carrier=with(dataset1, 
+                      factor(carrier))
+dataset1$origin=with(dataset1, 
+                     factor(origin))
+dataset1$dest=with(dataset1, 
+                   factor(dest))
+dataset1$name=with(dataset1, 
+                   factor(name))
 
 str(dataset1)
 
@@ -53,8 +57,17 @@ within(dataset1,{
 # sont considerer comme des depart sans retard( dep_delay = 0)
 #======== conversion des ligne vide a 0 =========================
                 #j'ai confondu = et ==, et apres il fallait que j'utilise la fonction is.na() pour trouver les champs vide 
-dataset1$dep_delay= with(dataset1,ifelse(is.na(dep_delay), 0, dep_delay ) )
+dataset1$dep_delay= with(dataset1,
+                         ifelse(is.na(dep_delay), 
+                                0, 
+                                dep_delay ) 
+                         )
 #A present, j'ai un soucis qui est que j'ai dans mes donner des nombre negatif. faut il les considerer comme un retard ou quoi ? 
 #==========================================================================
 #======================= delay_arr ===========
-dataset1$arr_delay= with(dataset1,ifelse(is.na(arr_delay), 0, arr_delay ) )
+dataset1$arr_delay= with(dataset1,
+                         ifelse(is.na(arr_delay), 
+                                0, 
+                                arr_delay ) 
+                         )
+
